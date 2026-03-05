@@ -716,7 +716,7 @@ section {
 }
 
 .timeline-content {
-    flex: 2;
+    flex: 1;
     padding: 1.5rem;
     background: rgba(30, 41, 59, 0.5);
     border-radius: 10px;
