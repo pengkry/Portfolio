@@ -679,60 +679,106 @@ section {
 
 /* ===== EXPERIENCE SECTION ===== */
 .timeline {
-    max-width: 800px;
-    margin: 0 auto;
     position: relative;
-}
-
-.timeline::before {
-    content: '';
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 2px;
-    height: 100%;
-    background: var(--gradient);
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding-left: 1rem;
 }
 
 .timeline-item {
     display: flex;
-    align-items: center;
-    margin-bottom: 3rem;
-    position: relative;
+    gap: 1.5rem;
+    align-items: flex-start;
 }
 
-.timeline-item:nth-child(odd) {
-    flex-direction: row-reverse;
-    text-align: right;
+/* Left column: dot + vertical line */
+.timeline-marker {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    padding-top: 0.35rem;
+}
+
+.marker-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #4f8ef7;
+    border: 2px solid white;
+    box-shadow: 0 0 0 3px rgba(79, 142, 247, 0.3);
+    flex-shrink: 0;
+}
+
+.marker-line {
+    width: 2px;
+    flex: 1;
+    min-height: 80px;
+    background: linear-gradient(to bottom, #4f8ef7, transparent);
+    margin-top: 6px;
+}
+
+/* Card */
+.timeline-card {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 1.25rem 1.5rem;
+    flex: 1;
+    transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.timeline-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: rgba(79, 142, 247, 0.4);
+}
+
+.timeline-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
 }
 
 .timeline-date {
-    flex: 1;
-    padding: 1rem;
-    background: rgba(99, 102, 241, 0.1);
-    border-radius: 10px;
+    font-size: 0.8rem;
+    color: #4f8ef7;
     font-weight: 600;
-    color: var(--primary);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
 }
 
-.timeline-content {
-    flex: 2;
-    padding: 1.5rem;
-    background: rgba(30, 41, 59, 0.5);
-    border-radius: 10px;
-    margin: 0 2rem;
-    border: 1px solid rgba(255, 255, 255, 0.1);
+.timeline-badge {
+    font-size: 0.7rem;
+    background: rgba(79, 142, 247, 0.15);
+    color: #4f8ef7;
+    border: 1px solid rgba(79, 142, 247, 0.3);
+    padding: 1px 8px;
+    border-radius: 999px;
+    font-weight: 500;
 }
 
-.timeline-content h3 {
-    color: var(--primary);
-    margin-bottom: 0.5rem;
+.timeline-role {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #ffffff;
+    margin: 0 0 0.2rem;
+    text-transform: capitalize;
 }
 
-.timeline-content h4 {
-    color: var(--gray);
-    margin-bottom: 0.5rem;
-    font-weight: 400;
+.timeline-company {
+    font-size: 0.9rem;
+    color: #a0b4cc;
+    font-weight: 500;
+    margin: 0 0 0.75rem;
+}
+
+.timeline-desc {
+    font-size: 0.875rem;
+    color: #c5d0dc;
+    line-height: 1.65;
+    margin: 0;
 }
 
 /* ===== CONTACT SECTION ===== */

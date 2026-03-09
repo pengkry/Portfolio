@@ -1,6 +1,19 @@
-// Form Handling JavaScript
+// ============================================================
+//  EmailJS Setup
+//  1. Sign up at https://emailjs.com
+//  2. Create a Service (Gmail etc.) → copy Service ID
+//  3. Create a Template           → copy Template ID
+//  4. Go to Account → copy Public Key
+//  5. Replace the 3 values below
+// ============================================================
+const EMAILJS_SERVICE_ID = "YOUR_SERVICE_ID";
+const EMAILJS_TEMPLATE_ID = "YOUR_TEMPLATE_ID";
+const EMAILJS_PUBLIC_KEY = "YOUR_PUBLIC_KEY";
 
 document.addEventListener('DOMContentLoaded', function () {
+    // Initialise EmailJS
+    emailjs.init(EMAILJS_PUBLIC_KEY);
+
     // Initialize forms
     initContactForm();
     initNewsletterForm();
@@ -26,24 +39,29 @@ function initContactForm() {
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
                 submitBtn.disabled = true;
 
-                // Simulate API call (replace with actual API call)
-                setTimeout(() => {
-                    // Show success message
-                    showNotification('Message sent successfully! I will get back to you soon.', 'success');
-
-                    // Reset form
-                    this.reset();
-
-                    // Reset button
-                    submitBtn.innerHTML = originalText;
-                    submitBtn.disabled = false;
-                }, 1500);
+                // ── Send via EmailJS ──────────────────────────────
+                emailjs.sendForm(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, this)
+                    .then(() => {
+                        // Success
+                        showNotification('Message sent successfully! I will get back to you soon.', 'success');
+                        contactForm.reset();
+                    })
+                    .catch((error) => {
+                        // Error
+                        console.error('EmailJS error:', error);
+                        showNotification('Oops! Something went wrong. Please try again.', 'error');
+                    })
+                    .finally(() => {
+                        // Always re-enable button
+                        submitBtn.innerHTML = originalText;
+                        submitBtn.disabled = false;
+                    });
             }
         });
     }
 }
 
-// Newsletter Form Handling
+// Newsletter Form Handling (unchanged)
 function initNewsletterForm() {
     const newsletterForm = document.querySelector('.newsletter-form');
 
@@ -55,12 +73,10 @@ function initNewsletterForm() {
             const email = emailInput.value.trim();
 
             if (validateEmail(email)) {
-                // Show loading state
                 const submitBtn = this.querySelector('button[type="submit"]');
                 const originalHtml = submitBtn.innerHTML;
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
 
-                // Simulate subscription
                 setTimeout(() => {
                     showNotification('Thank you for subscribing!', 'success');
                     emailInput.value = '';
@@ -74,21 +90,18 @@ function initNewsletterForm() {
     }
 }
 
-// Form Validation
+// Form Validation (unchanged)
 function validateForm(data) {
-    // Check required fields
     if (!data.name || !data.email || !data.subject || !data.message) {
         showNotification('Please fill in all required fields.', 'error');
         return false;
     }
 
-    // Validate email
     if (!validateEmail(data.email)) {
         showNotification('Please enter a valid email address.', 'error');
         return false;
     }
 
-    // Check message length
     if (data.message.length < 10) {
         showNotification('Message should be at least 10 characters long.', 'error');
         return false;
@@ -97,25 +110,20 @@ function validateForm(data) {
     return true;
 }
 
-// Email Validation
+// Email Validation (unchanged)
 function validateEmail(email) {
     const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return re.test(email);
 }
 
-// Notification System
+// Notification System (unchanged)
 function showNotification(message, type = 'info') {
-    // Remove existing notifications
     const existingNotifications = document.querySelectorAll('.notification');
-    existingNotifications.forEach(notification => {
-        notification.remove();
-    });
+    existingNotifications.forEach(notification => notification.remove());
 
-    // Create notification element
     const notification = document.createElement('div');
     notification.className = `notification notification-${type}`;
 
-    // Add icon based on type
     let icon = 'info-circle';
     if (type === 'success') icon = 'check-circle';
     if (type === 'error') icon = 'exclamation-circle';
@@ -127,7 +135,6 @@ function showNotification(message, type = 'info') {
         <button class="notification-close"><i class="fas fa-times"></i></button>
     `;
 
-    // Add styles
     notification.style.cssText = `
         position: fixed;
         top: 20px;
@@ -145,14 +152,12 @@ function showNotification(message, type = 'info') {
         max-width: 400px;
     `;
 
-    // Close button functionality
     const closeBtn = notification.querySelector('.notification-close');
     closeBtn.addEventListener('click', () => {
         notification.style.animation = 'slideInRight 0.3s ease reverse';
         setTimeout(() => notification.remove(), 300);
     });
 
-    // Auto-remove after 5 seconds
     setTimeout(() => {
         if (notification.parentNode) {
             notification.style.animation = 'slideInRight 0.3s ease reverse';
@@ -163,7 +168,6 @@ function showNotification(message, type = 'info') {
     document.body.appendChild(notification);
 }
 
-// Get notification color based on type
 function getNotificationColor(type) {
     switch (type) {
         case 'success': return '#10b981';
@@ -173,14 +177,12 @@ function getNotificationColor(type) {
     }
 }
 
-// Add notification animation CSS
 const notificationStyle = document.createElement('style');
 notificationStyle.textContent = `
     @keyframes slideInRight {
         from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
+        to   { transform: translateX(0);    opacity: 1; }
     }
-    
     .notification-close {
         background: transparent;
         border: none;
@@ -189,9 +191,6 @@ notificationStyle.textContent = `
         padding: 0.25rem;
         margin-left: auto;
     }
-    
-    .notification-close:hover {
-        opacity: 0.8;
-    }
+    .notification-close:hover { opacity: 0.8; }
 `;
 document.head.appendChild(notificationStyle);
